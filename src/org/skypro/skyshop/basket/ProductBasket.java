@@ -5,7 +5,7 @@ import org.skypro.skyshop.product.Product;
 import java.util.Arrays;
 
 public class ProductBasket {
-    private static Product[] products;
+    private Product[] products;
 
     public ProductBasket() {
         products = new Product[5];
@@ -35,33 +35,30 @@ public class ProductBasket {
 
     public boolean search(String name) {
         for (Product prod : products) {
-            if (prod != null) {
-                if (prod.getName().equals(name)) {
-                    return true;
-                }
+            if (prod != null && prod.getName().equals(name)) {
+                return true;
             }
         }
         return false;
     }
 
+
     public void clear() {
-        Arrays.fill(products,null);
+        Arrays.fill(products, null);
     }
 
-    public String toSting() {
-        String str = "";
+    public void print() {
         boolean isEmpty = true;
         for (Product prod : products) {
             if (prod != null) {
-                str += prod + "\n";
+                System.out.println(prod);
                 isEmpty = false;
             }
         }
         if (isEmpty) {
-            return "В корзине пусто";
+            System.out.println("В корзине пусто");
         } else {
-            str += "Итого:" + this.total();
-            return str;
+            System.out.println("Итого:" + this.total());
         }
     }
 }

@@ -18,12 +18,12 @@ public class App {
         basket1.addProduct(milk);
         basket1.addProduct(bread);
         basket1.addProduct(beer);
-        System.out.println(basket1.toSting());
+        basket1.print();
         System.out.println("Итоговая стоимость корзины:" + basket1.total());
         searchProduct(basket1, "Яблоко");
         searchProduct(basket1, "Пиво");
         basket1.clear();
-        System.out.println(basket1.toSting());
+        basket1.print();
         System.out.println("Итоговая стоимость корзины:" + basket1.total());
         searchProduct(basket1, "Яблоко");
     }
