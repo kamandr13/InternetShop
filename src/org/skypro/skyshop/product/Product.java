@@ -3,12 +3,10 @@ package org.skypro.skyshop.product;
 import org.skypro.skyshop.search.Searchable;
 
 public abstract class Product implements Searchable {
-    final String name;
-    //private final int price;
+    private final String name;
 
     public Product(String name) {
         this.name = name;
-        //this.price = price;
     }
 
     public String getName() {
