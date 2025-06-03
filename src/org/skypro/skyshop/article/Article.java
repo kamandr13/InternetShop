@@ -3,8 +3,8 @@ package org.skypro.skyshop.article;
 import org.skypro.skyshop.search.Searchable;
 
 public class Article implements Searchable {
-    private String name;
-    private String text;
+    private final String name;
+    private final String text;
 
     public Article(String name, String text) {
         this.name = name;
@@ -22,7 +22,7 @@ public class Article implements Searchable {
 
     @Override
     public String toString() {
-        return this.name + '\'' + this.text + '\'';
+        return this.name + '\n' + this.text;
     }
 
     @Override
