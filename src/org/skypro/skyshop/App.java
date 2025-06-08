@@ -1,32 +1,42 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
+import org.skypro.skyshop.search.SearchEngine;
 
 public class App {
     public static void main(String[] args) {
-        ProductBasket basket1 = new ProductBasket();
-        Product apple = new SimpleProduct("Яблоко", 150);
-        Product orange = new SimpleProduct("Апельсин", 200);
-        Product milk = new DiscountedProduct("Молоко", 120, 20);
+        SearchEngine searchEngine = new SearchEngine(15);
+        Product apple = null;
+        Product milk = null;
+        try {
+            apple = new SimpleProduct(null, 0);
+            milk = new DiscountedProduct("Молоко", 120, 20);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка при создании товара: " + e.getMessage());
+        }
         Product bread = new DiscountedProduct("Хлеб", 60, 10);
         Product beer = new FixPriceProduct("Пиво");
-        basket1.addProduct(apple);
-        basket1.addProduct(orange);
-        basket1.addProduct(milk);
-        basket1.addProduct(bread);
-        basket1.addProduct(beer);
-        basket1.print();
-        System.out.println("Итоговая стоимость корзины:" + basket1.total());
-        searchProduct(basket1, "Яблоко");
-        searchProduct(basket1, "Пиво");
-        basket1.clear();
-        basket1.print();
-        System.out.println("Итоговая стоимость корзины:" + basket1.total());
-        searchProduct(basket1, "Яблоко");
+        Article bob = new Article("Губка", "Поролоновая губка, для мытья посуды губка");
+        Article rag = new Article("Тряпка", "Ворсовая тряпка, для мытья полов");
+        searchEngine.add(apple);
+        searchEngine.add(bread);
+        searchEngine.add(milk);
+        searchEngine.add(beer);
+        searchEngine.add(bob);
+        searchEngine.add(rag);
+        try {
+            System.out.println(searchEngine.bestSearch("Пиво"));
+            System.out.println(searchEngine.bestSearch("губка"));
+            System.out.println(searchEngine.bestSearch("asdf"));
+        } catch (BestResultNotFound e) {
+            System.out.println(e);
+        }
     }
 
     public static void searchProduct(ProductBasket basket, String name) {
