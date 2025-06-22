@@ -1,34 +1,34 @@
 package org.skypro.skyshop.search;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
-    private List<Searchable> searchableList;
+    private Map<String, Searchable> searchableMap;
 
     public SearchEngine() {
-        this.searchableList = new LinkedList<>();
+        this.searchableMap = new TreeMap<>();
     }
 
-    public List<Searchable> search(String term) {
-        List<Searchable> result = new LinkedList<>();
-        for (Searchable el : searchableList) {
-            if (el != null && el.getSearchTerm().contains(term)) {
-                result.add(el);
+    public Map<String, Searchable> search(String term) {
+        Map<String, Searchable> result = new TreeMap<>();
+        for (Map.Entry<String, Searchable> el : searchableMap.entrySet()) {
+            if (el != null && el.getValue().getSearchTerm().contains(term)) {
+                result.put(el.getValue().getName(), el.getValue());
             }
         }
         return result;
     }
 
     public void add(Searchable elem) {
-        searchableList.add(elem);
+        searchableMap.put(elem.getName(), elem);
     }
 
     public Searchable bestSearch(String term) throws BestResultNotFound {
         String lowerCaseTerm = term.toLowerCase();
         Searchable bestResult = null;
         int maxScore = 0;
-        for (Searchable searchable : searchableList) {
+        for (Searchable searchable : searchableMap.values()) {
             if (searchable != null) {
                 int score = 0;
                 int index = 0;

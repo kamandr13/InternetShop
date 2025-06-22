@@ -1,27 +1,20 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 
 public class ProductBasket {
-    private List<Product> products = new LinkedList<>();
+    private Map<String, List<Product>> products = new TreeMap<>();
 
     public void addProduct(Product product) {
-        products.add(product);
+        products.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
     }
 
     public List<Product> removeProduct(String nameForRemove) throws EmptyBasket {
         List<Product> removedProducts = new LinkedList<>();
-        Iterator<Product> iterator = products.iterator();
-        while (iterator.hasNext()) {
-            Product prod = iterator.next();
-            if (prod.getName().equals(nameForRemove)) {
-                removedProducts.add(prod);
-                iterator.remove();
-            }
+        if (products.containsKey(nameForRemove)) {
+            removedProducts = products.get(nameForRemove);
+            products.remove(nameForRemove);
         }
         if (removedProducts.isEmpty()) {
             throw new EmptyBasket();
@@ -31,8 +24,8 @@ public class ProductBasket {
 
     public int total() {
         int total = 0;
-        for (Product prod : products) {
-            if (prod != null) {
+        for (List<Product> productList : products.values()) {
+            for (Product prod : productList) {
                 total += prod.getPrice();
             }
         }
@@ -40,10 +33,8 @@ public class ProductBasket {
     }
 
     public boolean search(String name) {
-        for (Product prod : products) {
-            if (prod != null && prod.getName().equals(name)) {
-                return true;
-            }
+        if (products.containsKey(name)) {
+            return true;
         }
         return false;
     }
@@ -55,10 +46,10 @@ public class ProductBasket {
     public void printBasket() {
         boolean isEmpty = true;
         int isSpecialCount = 0;
-        for (Product prod : products) {
-            if (prod != null) {
-                System.out.println(prod);
-                isEmpty = false;
+        for (Map.Entry<String, List<Product>> m : products.entrySet()) {
+            isEmpty = false;
+            System.out.println(m.getKey() + " - " + m.getValue());
+            for (Product prod : m.getValue()) {
                 if (prod.isSpecial()) {
                     isSpecialCount++;
                 }
@@ -67,7 +58,7 @@ public class ProductBasket {
         if (isEmpty) {
             System.out.println("В корзине пусто");
         } else {
-            System.out.println("Итого:" + this.total());
+            System.out.println("Итого: " + this.total());
             System.out.println("Специальных товаров:" + isSpecialCount);
         }
     }

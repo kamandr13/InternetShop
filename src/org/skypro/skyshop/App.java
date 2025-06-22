@@ -7,6 +7,7 @@ import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
 
 public class App {
@@ -29,16 +30,21 @@ public class App {
 
         System.out.println("1. Изменение используемой структуры данных в классе ProductBasket");
         ProductBasket basket = new ProductBasket();
+        basket.printBasket();
+        basket.addProduct(milk);
         basket.addProduct(milk);
         basket.addProduct(apple);
+        basket.addProduct(bread);
+        basket.addProduct(bread);
         basket.addProduct(bread);
         basket.addProduct(beer1);
         basket.addProduct(beer2);
         basket.addProduct(beer3);
         basket.addProduct(apple);
+        basket.addProduct(apple);
         basket.printBasket();
 
-        System.out.println("2. Добавление метода удаления продукта по имени из корзины");
+        System.out.println("2. Изменение метода удаления продукта по имени из корзины");
         try {
             System.out.println(basket.removeProduct("Яблоко"));
             basket.printBasket();
@@ -47,7 +53,7 @@ public class App {
             System.out.println(e);
         }
         basket.printBasket();
-
+//
         System.out.println("3. Изменение используемой структуры данных в классе SearchEngine");
         SearchEngine searchEngine = new SearchEngine();
         searchEngine.add(apple);
@@ -59,7 +65,12 @@ public class App {
         searchEngine.add(bob);
         searchEngine.add(rag);
         System.out.println(searchEngine.search("Пиво"));
-        System.out.println(searchEngine.search("губка"));
-        System.out.println(searchEngine.search("asdf"));
+        System.out.println(searchEngine.search("Яблоко"));
+        try {
+            System.out.println(searchEngine.bestSearch("Губка"));
+        } catch (BestResultNotFound e){
+            System.out.println(e);
+        }
     }
 }
+
