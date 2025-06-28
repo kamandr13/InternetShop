@@ -1,32 +1,31 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-
-import java.util.Arrays;
+import java.util.*;
 
 public class ProductBasket {
-    private Product[] products;
-
-    public ProductBasket() {
-        products = new Product[5];
-    }
+    private Map<String, List<Product>> products = new TreeMap<>();
 
     public void addProduct(Product product) {
-        for (int i = 0; i < products.length; i++) {
-            if (products[i] == null) {
-                products[i] = product;
-                break;
-            }
-            if (i == products.length - 1) {
-                System.out.println("Невозможно добавить продукт");
-            }
+        products.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
+    }
+
+    public List<Product> removeProduct(String nameForRemove) throws EmptyBasket {
+        List<Product> removedProducts = new LinkedList<>();
+        if (products.containsKey(nameForRemove)) {
+            removedProducts = products.get(nameForRemove);
+            products.remove(nameForRemove);
         }
+        if (removedProducts.isEmpty()) {
+            throw new EmptyBasket();
+        }
+        return removedProducts;
     }
 
     public int total() {
         int total = 0;
-        for (Product prod : products) {
-            if (prod != null) {
+        for (List<Product> productList : products.values()) {
+            for (Product prod : productList) {
                 total += prod.getPrice();
             }
         }
@@ -34,26 +33,23 @@ public class ProductBasket {
     }
 
     public boolean search(String name) {
-        for (Product prod : products) {
-            if (prod != null && prod.getName().equals(name)) {
-                return true;
-            }
+        if (products.containsKey(name)) {
+            return true;
         }
         return false;
     }
 
-
     public void clear() {
-        Arrays.fill(products, null);
+        products.clear();
     }
 
-    public void print() {
+    public void printBasket() {
         boolean isEmpty = true;
         int isSpecialCount = 0;
-        for (Product prod : products) {
-            if (prod != null) {
-                System.out.println(prod);
-                isEmpty = false;
+        for (Map.Entry<String, List<Product>> m : products.entrySet()) {
+            isEmpty = false;
+            System.out.println(m.getKey() + " - " + m.getValue());
+            for (Product prod : m.getValue()) {
                 if (prod.isSpecial()) {
                     isSpecialCount++;
                 }
@@ -62,7 +58,7 @@ public class ProductBasket {
         if (isEmpty) {
             System.out.println("В корзине пусто");
         } else {
-            System.out.println("Итого:" + this.total());
+            System.out.println("Итого: " + this.total());
             System.out.println("Специальных товаров:" + isSpecialCount);
         }
     }
