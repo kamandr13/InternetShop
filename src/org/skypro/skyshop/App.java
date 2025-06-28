@@ -22,13 +22,15 @@ public class App {
             System.out.println("Ошибка при создании товара: " + e.getMessage());
         }
         Product bread = new DiscountedProduct("Хлеб", 60, 10);
-        Product beer1 = new DiscountedProduct("Пиво Балтика 3", 100, 10);
-        Product beer2 = new FixPriceProduct("Пиво Балтика 7");
-        Product beer3 = new FixPriceProduct("Пиво Балтика 9");
+        Product beer1 = new DiscountedProduct("Пиво Балтика 1", 100, 10);
+        Product beer2 = new FixPriceProduct("Пиво Балтика 22");
+        Product beer3 = new FixPriceProduct("Пиво Балтика 333");
         Article bob = new Article("Губка", "Поролоновая губка, для мытья посуды губка");
         Article rag = new Article("Тряпка", "Ворсовая тряпка, для мытья полов");
+        Article book1 = new Article("Воин на отшибе", "Заметка на злобу дня");
+        Article book2 = new Article("Один в поле не воин", "Эпос");
+        Article book3 = new Article("Супервоин", "Фантастика");
 
-        System.out.println("1. Изменение используемой структуры данных в классе ProductBasket");
         ProductBasket basket = new ProductBasket();
         basket.printBasket();
         basket.addProduct(milk);
@@ -37,14 +39,13 @@ public class App {
         basket.addProduct(bread);
         basket.addProduct(bread);
         basket.addProduct(bread);
-        basket.addProduct(beer1);
-        basket.addProduct(beer2);
         basket.addProduct(beer3);
+        basket.addProduct(beer2);
+        basket.addProduct(beer1);
         basket.addProduct(apple);
         basket.addProduct(apple);
         basket.printBasket();
 
-        System.out.println("2. Изменение метода удаления продукта по имени из корзины");
         try {
             System.out.println(basket.removeProduct("Яблоко"));
             basket.printBasket();
@@ -53,9 +54,9 @@ public class App {
             System.out.println(e);
         }
         basket.printBasket();
-//
-        System.out.println("3. Изменение используемой структуры данных в классе SearchEngine");
+
         SearchEngine searchEngine = new SearchEngine();
+        searchEngine.add(apple);
         searchEngine.add(apple);
         searchEngine.add(bread);
         searchEngine.add(milk);
@@ -64,13 +65,14 @@ public class App {
         searchEngine.add(beer3);
         searchEngine.add(bob);
         searchEngine.add(rag);
-        System.out.println(searchEngine.search("Пиво"));
+        searchEngine.add(book1);
+        searchEngine.add(book2);
+        searchEngine.add(book3);
+
+        System.out.println("Демонстрация отсортированного поиска");
         System.out.println(searchEngine.search("Яблоко"));
-        try {
-            System.out.println(searchEngine.bestSearch("Губка"));
-        } catch (BestResultNotFound e){
-            System.out.println(e);
-        }
+        System.out.println(searchEngine.search("Пиво"));
+        System.out.println(searchEngine.search("воин"));
     }
 }
 
