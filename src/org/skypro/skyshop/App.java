@@ -29,7 +29,7 @@ public class App {
         Article rag = new Article("Тряпка", "Ворсовая тряпка, для мытья полов");
         Article book1 = new Article("Воин на отшибе", "Заметка на злобу дня");
         Article book2 = new Article("Один в поле не воин", "Эпос");
-        Article book3 = new Article("Супервоин", "Фантастика");
+        Article book3 = new Article("Воин, супервоин", "Фантастика");
 
         ProductBasket basket = new ProductBasket();
         basket.printBasket();
@@ -73,6 +73,13 @@ public class App {
         System.out.println(searchEngine.search("Яблоко"));
         System.out.println(searchEngine.search("Пиво"));
         System.out.println(searchEngine.search("воин"));
+
+        System.out.println("Демонстрация наилучшего результата поиска");
+        try {
+            System.out.println(searchEngine.bestSearch("воин"));
+        } catch (BestResultNotFound e) {
+            System.out.println(e);
+        }
     }
 }
 

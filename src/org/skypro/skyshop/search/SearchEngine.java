@@ -23,28 +23,22 @@ public class SearchEngine {
 
     public Searchable bestSearch(String term) throws BestResultNotFound {
         String lowerCaseTerm = term.toLowerCase();
-        Searchable bestResult = null;
-        int maxScore = 0;
-        for (Searchable searchable : searchableSet) {
-            if (searchable != null) {
-                int score = 0;
-                int index = 0;
-                String searchTerm = searchable.getSearchTerm().toLowerCase();
-                int subStrIndex = searchTerm.indexOf(lowerCaseTerm, index);
-                while (subStrIndex != -1) {
-                    score++;
-                    index = subStrIndex + term.length();
-                    subStrIndex = searchTerm.indexOf(lowerCaseTerm, index);
-                }
-                if (score > maxScore) {
-                    maxScore = score;
-                    bestResult = searchable;
-                }
-            }
+        return searchableSet.stream()
+                .filter(Objects::nonNull)
+                .map(searchable -> new SearchableOccurScore(searchable, countOccurScore(searchable.getSearchTerm().toLowerCase(), lowerCaseTerm)))
+                .filter(o -> o.occurScore > 0)
+                .max(Comparator.comparingInt(o -> o.occurScore))
+                .map(o -> o.searchable)
+                .orElseThrow(() -> new BestResultNotFound(term));
+    }
+
+    private int countOccurScore(String text, String pattern) {
+        int occurScore = 0;
+        int index = 0;
+        while ((index = text.indexOf(pattern, index)) != -1) {
+            occurScore++;
+            index += pattern.length();
         }
-        if (bestResult == null) {
-            throw new BestResultNotFound(term);
-        }
-        return bestResult;
+        return occurScore;
     }
 }
