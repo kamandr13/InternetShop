@@ -2,68 +2,59 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class ProductBasket {
-    private Product[] products;
-
-    public ProductBasket() {
-        products = new Product[5];
-    }
+    private Map<String, List<Product>> products = new TreeMap<>();
 
     public void addProduct(Product product) {
-        for (int i = 0; i < products.length; i++) {
-            if (products[i] == null) {
-                products[i] = product;
-                break;
-            }
-            if (i == products.length - 1) {
-                System.out.println("Невозможно добавить продукт");
-            }
+        products.computeIfAbsent(product.getName(), k -> new ArrayList<>()).add(product);
+    }
+
+    public List<Product> removeProduct(String nameForRemove) throws EmptyBasket {
+        List<Product> removedProducts = new LinkedList<>();
+        if (products.containsKey(nameForRemove)) {
+            removedProducts = products.get(nameForRemove);
+            products.remove(nameForRemove);
         }
+        if (removedProducts.isEmpty()) {
+            throw new EmptyBasket();
+        }
+        return removedProducts;
     }
 
     public int total() {
-        int total = 0;
-        for (Product prod : products) {
-            if (prod != null) {
-                total += prod.getPrice();
-            }
-        }
+        int total = products.values().stream().flatMap(Collection::stream)
+                .mapToInt(p -> p.getPrice())
+                .sum();
         return total;
     }
 
     public boolean search(String name) {
-        for (Product prod : products) {
-            if (prod != null && prod.getName().equals(name)) {
-                return true;
-            }
+        if (products.containsKey(name)) {
+            return true;
         }
         return false;
     }
 
-
     public void clear() {
-        Arrays.fill(products, null);
+        products.clear();
     }
 
-    public void print() {
-        boolean isEmpty = true;
-        int isSpecialCount = 0;
-        for (Product prod : products) {
-            if (prod != null) {
-                System.out.println(prod);
-                isEmpty = false;
-                if (prod.isSpecial()) {
-                    isSpecialCount++;
-                }
-            }
-        }
-        if (isEmpty) {
+    public long getSpecialCount() {
+        return products.values().stream().flatMap(Collection::stream)
+                .filter(p -> p.isSpecial())
+                .count();
+    }
+
+    public void printBasket() {
+        if (products.isEmpty()) {
             System.out.println("В корзине пусто");
         } else {
-            System.out.println("Итого:" + this.total());
-            System.out.println("Специальных товаров:" + isSpecialCount);
+            products.entrySet().stream()
+                    .forEach(p -> System.out.println(p.getKey() + " - " + p.getValue()));
+            System.out.println("Итого: " + this.total());
+            System.out.println("Специальных товаров:" + this.getSpecialCount());
         }
     }
 }
